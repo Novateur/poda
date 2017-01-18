@@ -1,0 +1,116 @@
+<div class="row container" >
+            <h1>View Order</h1>
+            <?php $orderNo = $_GET['Order'];?>
+            <?php $orderDetails = viewOrder($orderNo);?>
+            <div class="col s6"><label>Order Number: <?php echo $orderNo?></label></div>
+            <div class="col s6"><label>Order By: <?php echo $orderDetails[order][customer][first_name]. " ". $orderDetails[order][customer][last_name]?></label></div>
+        </div>
+        <div class="row container">
+            <div class="col s12"><h4>Items Ordered</h4></div>
+            
+            <div>           
+                    <table class="striped">
+                        <thead>
+                          <tr>
+                              <th data-field="id">SN</th>
+                              <th data-field="id">Product Name</th>
+                              <th data-field="name">Packs</th>
+                              <th data-field="price">Total</th>
+                              <th data-field="price">SKU</th>
+                              <th data-field="price">Property</th>
+                              <th data-field="price">Actions</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+    <?php $lineItems = $orderDetails[order][line_items]; ?> 
+<!--    <?php print_r($lineItemsName." ".$lineItemsQty." ".$lineItemsTotal." ".$lineItemsSKU." ".$lineItemsProperty1." ".$lineItemsProperty2); ?>-->
+        <?php
+         for($i=0; $i<count($lineItems); $i++){
+             $lineItemsName = $orderDetails[order][line_items][$i][name];
+             $lineItemsQty = $orderDetails[order][line_items][$i][quantity];
+             $lineItemsTotal = $orderDetails[order][line_items][$i][total];
+             $lineItemsSKU = $orderDetails[order][line_items][$i][sku];
+//             $lineItemsPropertyLabel = $orderDetails[order][line_items][$i][meta][0][label];
+//             $lineItemsPropertyValue = $orderDetails[order][line_items][$i][meta][0][value];
+              $countMeta =  $orderDetails[order][line_items][$i][meta];
+//                     print_r(count($countMeta));
+//             print_r($countMeta);
+//            $link_address = "view.php?Order=".$result[$i][order_number];
+            echo "<tr>";
+            echo "<td>".$i."</td>";
+            echo "<td>".$lineItemsName."</td>";
+            echo "<td>".$lineItemsQty."</td>";
+            echo "<td>".$lineItemsTotal."</td>";
+            echo "<td>".$lineItemsSKU."</td>";
+             
+           
+           
+            echo "<td>"."<a href='".$link_address."'class=\"waves-effect waves-light btn\">View </a>"."</td>";
+            echo "</tr>";                
+        }           
+            ?>
+                            
+                         
+                        </tbody>
+              </table>
+            </div>           
+        </div>
+        <hr/ class="container">
+        <div class="row container">
+                 <?php $bilAddress1 = $orderDetails[order][customer][billing_address][address_1]; ?>
+                <?php $bilAddress2 = $orderDetails[order][customer][billing_address][address_2]; ?>
+                <?php $bilCity = $orderDetails[order][customer][billing_address][city]; ?>
+                <?php $bilState = $orderDetails[order][customer][billing_address][state]; ?>
+                <?php $bilCountry = $orderDetails[order][customer][billing_address][country]; ?>
+                <?php $bilEmail = $orderDetails[order][customer][billing_address][email]; ?>
+                <?php $bilPhone = $orderDetails[order][customer][billing_address][phone]; ?>
+
+                 <?php $shipAddress1 = $orderDetails[order][customer][shipping_address][address_1]; ?>
+                <?php $shipAddress2 = $orderDetails[order][customer][shipping_address][address_2]; ?>
+                <?php $shipCity = $orderDetails[order][customer][shipping_address][city]; ?>
+                <?php $shipState = $orderDetails[order][customer][shipping_address][state]; ?>
+                <?php $shipCountry = $orderDetails[order][customer][shipping_address][country]; ?>
+                <?php $shipEmail = $orderDetails[order][customer][shipping_address][email]; ?>
+                <?php $shipPhone = $orderDetails[order][customer][shipping_address][phone]; ?>
+            <div class="col s4">
+              <h5>Billing Details</h5>
+                  <label>Address 1: </label><span><?php echo $bilAddress1; ?></span><br/>
+                  <label>Address 2: </label><span><?php echo $bilAddress2; ?></span><br/>
+                  <label>City: </label><span><?php echo $bilCity; ?></span><br/>
+                  <label>State: </label><span><?php echo $bilState; ?></span><br/>
+                  <label>Country: </label><span><?php echo $bilCountry; ?></span>
+            </div>
+            <div class="col s4">
+              <h5>Shipping Details</h5> 
+                  <label>Address 1: </label><span><?php echo $shipAddress1; ?></span><br/>
+                  <label>Address 2: </label><span><?php echo $shipAddress2; ?></span><br/>
+                  <label>City: </label><span><?php echo $shipCity; ?></span><br/>
+                  <label>State: </label><span><?php echo $shipState; ?></span><br/>
+                  <label>Country: </label><span><?php echo $shipCountry; ?></span> 
+            </div>
+            <div class="col s4">
+              <h5>Contact Details</h5> 
+                <p>Billing Contact</p>
+                  <label>Email: </label><span><?php echo $bilEmail; ?></span><br/>
+                  <label>Phone Number: </label><span><?php echo $bilPhone; ?></span><br/> 
+                <p>Shipping Contact</p>
+                  <label>Email: </label><span><?php echo $shipEmail; ?></span><br/>
+                  <label>Phone Number: </label><span><?php echo $shipPhone; ?></span><br/> 
+            </div>
+        
+        </div>
+        
+        
+           // this line loads the library 
+            require('/twilio-php/Services/Twilio.php'); 
+
+            $account_sid = 'ACd1075aeb55a161ac7e1e5c28468cbf18'; 
+            $auth_token = '3fb92f0007c07c1d3ced68f7ae8dbe9e'; 
+            $client = new Services_Twilio($account_sid, $auth_token); 
+
+            $client->account->messages->create(array( 
+                'To' => "08170593352", 
+                'From' => "Print Anything", 
+                'Body' => "test msg",   
+            )); 
